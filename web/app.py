@@ -1,9 +1,34 @@
-from flask import Flask
+import os
+from flask import Flask, redirect, url_for, request, render_template
+from pymongo import MongoClient
+
 app = Flask(__name__)
 
-@app.route('/')
-def hello_world():
-    return 'Flask Dockerized'
+client = MongoClient(
+    os.environ['DB_PORT_27017_TCP_ADDR'],
+    27017)
+db = client.simuldb
 
-if __name__ == '__main__':
-    app.run(debug=True,host='0.0.0.0')
+
+@app.route('/')
+def simul():
+
+    _items = db.simuldb.find()
+    items = [item for item in _items]
+
+    return render_template('simul.html', items=items)
+
+
+@app.route('/new', methods=['POST'])
+def new():
+
+    item_doc = {
+        'name': request.form['name'],
+        'description': request.form['description']
+    }
+    db.simuldb.insert_one(item_doc)
+
+    return redirect(url_for('simul'))
+
+if __name__ == "__main__":
+    app.run(host='0.0.0.0', debug=True)
