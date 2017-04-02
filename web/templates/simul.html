@@ -5,10 +5,11 @@
   <input type="submit"></input>
 </form>
 
-<h1>Add second info to a key (HTML doesn't support Patch. Curl this instead.)</h1>
-<form action="/update" method="PATCH">
+<h1>Add second info to a key (PATCH)</h1>
+<form action="/update" method="POST">
+  <input type="hidden" name="_method" value="PATCH"></input>
   Key:<input type="text" name="key"></input><br>
-  Info2:<input type="text" name="info2"></input>
+  Info2:<input type="text" name="info"></input>
   <input type="submit"></input>
 </form>
 

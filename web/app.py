@@ -1,6 +1,6 @@
 import os
 import logging, sys
-from flask import Flask, redirect, url_for, request, render_template
+from flask import Flask, redirect, url_for, request, render_template, abort
 from pymongo import MongoClient
 
 app = Flask(__name__)
@@ -32,10 +32,19 @@ def new():
 
     return redirect(url_for('simul'))
 
-@app.route('/update', methods=['PATCH'])
+@app.route('/update', methods=['PATCH','POST'])
 def update():
-    criteria = request.args.get('key')
-    info_payload = request.args.get('info')
+    #Note: POST method is only for HTML forms workaround
+    logging.debug(request.form['_method'])
+    logging.debug(str(request.method))
+    if request.method=='POST' and request.form['_method']!='PATCH':
+        abort(400);
+    if request.method=='PATCH':
+        criteria = request.args.get('key')
+        info_payload = request.args.get('info')
+    if request.method=='POST':
+        criteria = request.form['key']
+        info_payload = request.form['info']
     item_doc = {
         'key' : criteria,
         'info2' : info_payload
