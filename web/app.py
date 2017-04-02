@@ -1,4 +1,5 @@
 import os
+import logging, sys
 from flask import Flask, redirect, url_for, request, render_template
 from pymongo import MongoClient
 
@@ -8,6 +9,7 @@ client = MongoClient(
     os.environ['DB_PORT_27017_TCP_ADDR'],
     27017)
 db = client.simuldb
+logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
 
 @app.route('/')
@@ -23,12 +25,34 @@ def simul():
 def new():
 
     item_doc = {
-        'name': request.form['name'],
-        'description': request.form['description']
+        'key': request.form['key'],
+        'info1': request.form['info1']
     }
     db.simuldb.insert_one(item_doc)
 
     return redirect(url_for('simul'))
+
+@app.route('/update', methods=['PATCH'])
+def update():
+    criteria = request.args.get('key')
+    info_payload = request.args.get('info')
+    item_doc = {
+        'key' : criteria,
+        'info2' : info_payload
+    }
+    db.simuldb.update_one(
+    {'key': criteria},
+     {'$set': item_doc
+     })
+    logging.debug("Updated Key: " + str(criteria) + " with info: " + str(info_payload))
+    return redirect(url_for('simul'))
+
+@app.route('/get_id', methods=['GET'])
+def get_id():
+    get_id_for_this_key = request.args.get('key')
+    items=db.simuldb.find({"key":get_id_for_this_key})
+
+    return render_template('simul.html',items=items)
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', debug=True)

@@ -1,10 +1,26 @@
+<h1>Create Key</h1>
 <form action="/new" method="POST">
-  <input type="text" name="name"></input>
-  <input type="text" name="description"></input>
+  Key:<input type="text" name="key"></input><br>
+  Info1:<input type="text" name="info1"></input><br>
   <input type="submit"></input>
 </form>
 
+<h1>Add second info to a key (HTML doesn't support Patch. Curl this instead.)</h1>
+<form action="/update" method="PATCH">
+  Key:<input type="text" name="key"></input><br>
+  Info2:<input type="text" name="info2"></input>
+  <input type="submit"></input>
+</form>
+
+<h1>Get Key by ID</h1>
+<form action="/get_id" method="GET">
+  Key:<input type="text" name="key"></input><br>
+  <input type="submit"></input>
+</form>
+
+<h1>List of Simuls</h1>
 {% for item in items %}
-  <h1> {{ item.name }} </h1>
-  <p> {{ item.description }} <p>
+  <h2>Key: {{ item.key }} </h2>
+  <p>Info1: {{ item.info1 }} <p>
+  <p>Info2: {{ item.info2 }} <p>
 {% endfor %}
