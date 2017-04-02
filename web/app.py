@@ -35,8 +35,6 @@ def new():
 @app.route('/update', methods=['PATCH','POST'])
 def update():
     #Note: POST method is only for HTML forms workaround
-    logging.debug(request.form['_method'])
-    logging.debug(str(request.method))
     if request.method=='POST' and request.form['_method']!='PATCH':
         abort(400);
     if request.method=='PATCH':
