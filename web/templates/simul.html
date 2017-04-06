@@ -19,8 +19,13 @@
   <input type="submit"></input>
 </form>
 
-<h1>List of Simuls</h1>
+<h1>List of Open Simuls</h1>
 {% for item in items %}
+  <h2>Key: {{ item.key }} </h2>
+{% endfor %}
+
+<h1>List of Completed Simuls</h1>
+{% for item in compitems %}
   <h2>Key: {{ item.key }} </h2>
   <p>Info1: {{ item.info1 }} <p>
   <p>Info2: {{ item.info2 }} <p>

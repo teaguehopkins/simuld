@@ -11,14 +11,16 @@ client = MongoClient(
 db = client.simuldb
 logging.basicConfig(stream=sys.stderr, level=logging.DEBUG)
 
-
 @app.route('/')
 def simul():
 
-    _items = db.simuldb.find()
+    _items = db.simuldb.find({"info2":None})
     items = [item for item in _items]
 
-    return render_template('simul.html', items=items)
+    _compitems = db.simuldb.find({"info2":{"$ne":None}})
+    compitems = [item for item in _compitems]
+
+    return render_template('simul.html', items=items, compitems=compitems)
 
 
 @app.route('/new', methods=['POST'])
